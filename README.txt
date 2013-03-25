@@ -1,9 +1,9 @@
-dimred
+asm
 ======
 
 The python module 'dimred.py' can be used to perform dimensionality reduction. An object representing the reduced dimension input space can be created using
 
-import dimred
+import asm
 
 dr = dimred.Dimred(f,m,Nsamples)
 

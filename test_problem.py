@@ -3,7 +3,8 @@ from matplotlib import cm
 import matplotlib.pyplot as plt
 from numpy import *
 import pylab
-import dimred, kriging
+from asm import ASM
+from kriging import Kriging
 
 def f(x):
     '''
@@ -33,9 +34,9 @@ Nsamples = 1000
 m = 10
 
 # construct dimension reduction object 
-dr = dimred.Dimred(f,m,Nsamples)
-W = dr.W
-lamb = dr.lamb
+asm = ASM(f,m,Nsamples)
+W = asm.W
+lamb = asm.lamb
 
 # plot the eigenvalues
 plt.semilogy(range(len(lamb)),lamb,'*')
@@ -48,7 +49,7 @@ n = 2
 # number of design sites per reduced dimension 
 Nd = 10
 # construct the kriging surface
-kr = kriging.Kriging(dr, m, n, Nd)
+kr = Kriging(asm, m, n, Nd)
 yd = kr.yd
 fd = kr.fd
 
@@ -64,7 +65,7 @@ for i in range(N):
         ys[i,j,0] = y1[i]
         ys[i,j,1] = y2[j]
         xs = dot(W[:,:n],ys[i,j,:])
-        fs[i,j], es[i,j] = kr.evaluate(xs)
+        fs[i,j], es[i,j] = kr(xs)
 
 # plot response surface
 fig = plt.figure()

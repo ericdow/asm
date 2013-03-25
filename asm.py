@@ -1,7 +1,7 @@
 from numpy import *
 import pylab
 
-class Dimred:
+class ASM:
     '''
     Inputs:
     modfun   : function that takes in m-vector

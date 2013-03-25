@@ -5,23 +5,29 @@ import pylab
 class Kriging:
     '''
     Inputs:
-    dimred : instance of the Dimred class
+    asm    : instance of the ASM class
     m      : size of the original input space
     n      : size of reduced dimension
     Nd     : number of design points in each direction 
     '''
-    def __init__(self, dimred, m, n, Nd):
+    def __init__(self, asm, m, n, Nd):
 
-        self.dr = dimred
+        self.asm = asm
         self.m  = m
         self.n  = n
 
         # construct the design points
-        self.yd = self.design_points(dimred.W,n,Nd)
+        self.yd = self.design_points(asm.W,n,Nd)
 
         # build the kriging model
-        self.C, self.fd = self.construct(self.yd,dimred.W,n,\
-                                                  dimred.lamb)
+        self.C, self.fd = self.construct(self.yd,asm.W,n,\
+                                                  asm.lamb)
+
+    def __call__(self, x0):
+        
+        f0, e0 = self.evaluate(x0)
+
+        return f0, e0
 
     def design_points(self,W,n,Nd):
         '''
@@ -114,7 +120,7 @@ class Kriging:
         # evaluate the model at the design sights
         fd = zeros(N)
         for i in range(N):
-            fd[i], bar = self.dr.mf(dot(W[:,:n],yd[i,:]))
+            fd[i], bar = self.asm.mf(dot(W[:,:n],yd[i,:]))
 
         return C, fd
 
@@ -129,8 +135,8 @@ class Kriging:
         e0 : kriging error at x0
         '''
 
-        lamb = self.dr.lamb
-        W    = self.dr.W
+        lamb = self.asm.lamb
+        W    = self.asm.W
 
         sig2 = 2.*sqrt(self.m)/pi*sum(lamb)
         eta2 = 2.*sqrt(self.m)/pi*sum(lamb[self.n:])
