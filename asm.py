@@ -19,6 +19,27 @@ class ASM:
         # compute the eigenvalues/vectors of Jacobian covariance
         self.lamb, self.W = self.eig_jac_cov(samples)
 
+    def __call__(self,y):
+        
+        n = len(y)
+        if n == self.m:
+            x = copy(y)
+        else:
+            x = dot(self.W[:,:n], y)
+        f, g = self.mf(x)
+
+        return f
+
+    def transform(self,xy):
+
+        n = len(xy)
+        if n == self.m:
+            return dot(self.W[:,:n].T, xy)
+        else if n < self.m:
+            return dot(self.W[:,:n], xy)
+        else:
+            print 'Error: n > m'
+
     def constructSamples(self):
         '''
         Inputs:

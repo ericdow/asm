@@ -47,7 +47,7 @@ plt.ylabel('Eigenvalue')
 # choose reduced dimension based on eigenvalue decay
 n = 2
 # number of design sites per reduced dimension 
-Nd = 10
+Nd = 6
 # construct the kriging surface
 kr = Kriging(asm, m, n, Nd)
 yd = kr.yd
@@ -57,6 +57,7 @@ fd = kr.fd
 N = 15
 ys = zeros((N,N,n))
 fs = zeros((N,N))
+fe = zeros((N,N))
 es = zeros((N,N))
 y1 = linspace(min(yd[:,0]),max(yd[:,0]),N)
 y2 = linspace(min(yd[:,1]),max(yd[:,1]),N)
@@ -66,6 +67,7 @@ for i in range(N):
         ys[i,j,1] = y2[j]
         xs = dot(W[:,:n],ys[i,j,:])
         fs[i,j], es[i,j] = kr(xs)
+        fe[i,j], bar = f(xs)
 
 # plot response surface
 fig = plt.figure()
@@ -83,5 +85,13 @@ surf = ax.plot_surface(ys[:,:,0],ys[:,:,1],es,rstride=1,\
         cstride=1,cmap=cm.jet,linewidth=0)
 fig.colorbar(surf)
 plt.title('Kriging Error')
+
+# plot actual error
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf = ax.plot_surface(ys[:,:,0],ys[:,:,1],fe-fs,rstride=1,\
+        cstride=1,cmap=cm.jet,linewidth=0)
+fig.colorbar(surf)
+plt.title('Actual Error')
 
 plt.show()
