@@ -30,15 +30,13 @@ class ASM:
 
         return f
 
-    def transform(self,xy):
+    def transform(self,y):
 
-        n = len(xy)
-        if n == self.m:
-            return dot(self.W[:,:n].T, xy)
-        else if n < self.m:
-            return dot(self.W[:,:n], xy)
+        n = len(y)
+        if n < self.m:
+            return dot(self.W[:,:n], y)
         else:
-            print 'Error: n > m'
+            print 'Error: n >= m'
 
     def constructSamples(self):
         '''

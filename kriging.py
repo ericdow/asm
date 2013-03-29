@@ -120,7 +120,7 @@ class Kriging:
         # evaluate the model at the design sights
         fd = zeros(N)
         for i in range(N):
-            fd[i], bar = self.asm.mf(dot(W[:,:n],yd[i,:]))
+            fd[i] = self.asm(self.asm.transform(yd[i,:]))
 
         return C, fd
 
